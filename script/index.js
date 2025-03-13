@@ -29,8 +29,8 @@ function displayCategories(categories) {
 }
 
 //Video cards.
-function loadVideos() {
-  fetch("https://openapi.programming-hero.com/api/phero-tube/videos")
+function loadVideos(searchText = "") {
+  fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
     .then((res) => res.json())
     .then((data) => {
       removeActiveClass();
@@ -60,7 +60,9 @@ const displayVideos = (videos) => {
     videoCard.innerHTML = `
     <div class="card bg-base-100 shadow-sm">
         <figure class="relative">
-          <img class="w-full h-[150px] object-cover" src="${video.thumbnail}" alt="Shoes" />
+          <img class="w-full h-[150px] object-cover" src="${
+            video.thumbnail
+          }" alt="Shoes" />
           <span class="absolute bottom-2 right-2 text-white bg bg-black rounded-sm px-2 text-sm">3hrs 56min ago</span>
         </figure>
         <div class="flex gap-3 py-5">
@@ -73,13 +75,21 @@ const displayVideos = (videos) => {
           </div>
           <div class="intro">
             <h3 class="text-xl">${video.title}</h3>
-            <p class="text-sm text-gray-400 flex">${video.authors[0].profile_name}
-            ${video.authors[0].verified == true ? '<img class="w-5 h-5 ml-1" src="assets/icons8-verified-badge-48.png" alt="">': ''}
+            <p class="text-sm text-gray-400 flex">${
+              video.authors[0].profile_name
+            }
+            ${
+              video.authors[0].verified == true
+                ? '<img class="w-5 h-5 ml-1" src="assets/icons8-verified-badge-48.png" alt="">'
+                : ""
+            }
             </p>
             <p class="text-sm text-gray-500">${video.others.views} views</p>
           </div>
         </div>
-        <button onclick="loadVideoDetails('${video.video_id}')"class="btn btn-block">Show Details</button>
+        <button onclick="loadVideoDetails('${
+          video.video_id
+        }')"class="btn btn-block">Show Details</button>
       </div>
     `;
     videoContainer.append(videoCard);
@@ -135,5 +145,11 @@ const displayVideoDetails = (video) => {
 </div>
   `;
 };
+
+document.getElementById('search-input').addEventListener("keyup", (e)=>{
+  const input = e.target.value;
+  // console.log(input);
+  loadVideos(input);
+})
 //function call
 loadCategories();
